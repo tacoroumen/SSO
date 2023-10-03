@@ -1,0 +1,7 @@
+{
+	"client_id": "f8906a64-ed0d-4341-bc42-466d1b091093",
+	"redirect_uri": "https://172.0.0.1/verify",
+	"grant_type": "authorization_code",
+	"scope": "user.read mail.read",
+	"medwerker_email": "@41d2tz.onmicrosoft.com"
+}
