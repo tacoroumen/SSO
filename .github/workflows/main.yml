@@ -34,4 +34,4 @@ jobs:
             registry-username: ${{ secrets.REGISTRY_USERNAME }}
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: sso
-            location: 'west eu'
+            location: 'germanynorth'
