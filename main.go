@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
@@ -29,21 +30,9 @@ func getconfig() (string, string, string, string, string) {
 }
 
 func getsecrets() (string, string) {
-	// Read the content of the secrets.json file
-	data, err := ioutil.ReadFile("secrets.json")
-	if err != nil {
-		fmt.Println("Error reading secrets.json:", err)
-		return "", ""
-	}
-
-	// Parse the JSON data into the Secrets struct
-	var secrets Secrets
-	err = json.Unmarshal(data, &secrets)
-	if err != nil {
-		fmt.Println("Error parsing JSON:", err)
-		return "", ""
-	}
-	return secrets.State, secrets.Client_secret
+	State := os.Getenv("SSO_STATE")
+	Client_Secret := os.Getenv("SSO_CLIENT_SECRET")
+	return State, Client_Secret
 }
 
 func containsSubstring(inputString, substring string) bool {
@@ -57,11 +46,6 @@ type Config struct {
 	Grant_type_refresh string `json:"grant_type_refresh"`
 	Scope              string `json:"scope"`
 	Medwerker_Email    string `json:"medwerker_email"`
-}
-
-type Secrets struct {
-	State         string `json:"state"`
-	Client_secret string `json:"client_secret"`
 }
 
 type microsoft_access struct {
