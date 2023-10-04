@@ -35,6 +35,6 @@ jobs:
           name: sso
           location: 'germanynorth'
           environment-variables: |
-            AZURE_SSO_STATE=${{ secrets.SSO_STATE }}
-            AZURE_SSO_CLIENT_SECRET=${{ secrets.SSO_CLIENT_SECRET }}
+            SSO_STATE=${{ secrets.SSO_STATE }}
+            SSO_CLIENT_SECRET=${{ secrets.SSO_CLIENT_SECRET }}
 
