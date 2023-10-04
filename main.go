@@ -140,21 +140,21 @@ func main() {
 				return
 			}
 
-			AgeGroup, CountryCode, UUID, eMail, FirstName, LastName := Graph_Microsoft(microsoft_access.AccessToken)
+			AgeGroup, CountryCode, UUID, Email, FirstName, LastName := Graph_Microsoft(microsoft_access.AccessToken)
 			Name := FirstName + " " + LastName
-			Employee := containsSubstring(eMail, medwerker_email)
+			Employee := containsSubstring(Email, medwerker_email)
 
 			// Create the JSON response with the desired format
 			jsonResponse := fmt.Sprintf(`{
 	"AgeGroup": "%s",
 	"CountryCode": "%s",
 	"UUID": "%s",
-	"eMail": "%s",
+	"Email": "%s",
 	"Employee": "%v",
 	"Name": "%s",
 	"FirstName": "%s",
 	"LastName": "%s"
-}`, AgeGroup, CountryCode, UUID, eMail, Employee, Name, FirstName, LastName)
+}`, AgeGroup, CountryCode, UUID, Email, Employee, Name, FirstName, LastName)
 
 			// Set the Content-Type header and write the JSON response
 			w.Header().Set("Content-Type", "application/json")
@@ -165,7 +165,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
-func Graph_Microsoft(token string) (AgeGroup string, CountryCode string, UUID string, eMail string, FirstName string, LastName string) {
+func Graph_Microsoft(token string) (AgeGroup string, CountryCode string, UUID string, Email string, FirstName string, LastName string) {
 	url := "https://graph.microsoft.com/beta/me/profile"
 
 	// Create a new HTTP request
@@ -210,10 +210,10 @@ func Graph_Microsoft(token string) (AgeGroup string, CountryCode string, UUID st
 		AgeGroup := Microsoft_Graph.Account[0].AgeGroup
 		CountryCode := Microsoft_Graph.Account[0].CountryCode
 		UUID := Microsoft_Graph.Account[0].UUID
-		eMail := Microsoft_Graph.Emails[0].Email
+		Email := Microsoft_Graph.Emails[0].Email
 		FirstName := Microsoft_Graph.Names[0].First
 		LastName := Microsoft_Graph.Names[0].Last
-		return AgeGroup, CountryCode, UUID, eMail, FirstName, LastName
+		return AgeGroup, CountryCode, UUID, Email, FirstName, LastName
 	} else {
 		fmt.Println("Request failed with status code:", resp.StatusCode)
 
