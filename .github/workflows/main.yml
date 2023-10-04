@@ -1,9 +1,9 @@
 on: [push]
-name: Push_to_Azure
+name: Linux_Container_Workflow
 
 env:
-  sso_state: ${{ secrets.SSO_STATE }}
-  sso_client_secret: ${{ secrets.SSO_CLIENT_SECRET }}
+  AZURE_SSO_STATE: ${{ secrets.SSO_STATE }}
+  AZURE_SSO_CLIENT_SECRET: ${{ secrets.SSO_CLIENT_SECRET }}
 
 jobs:
   build-and-deploy:
@@ -11,12 +11,12 @@ jobs:
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
-      
+
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
+
       - name: 'Build and push image'
         uses: azure/docker-login@v1
         with:
@@ -26,7 +26,7 @@ jobs:
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sso:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sso:${{ github.sha }}
-    
+
       - name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1'
         with:
@@ -39,5 +39,6 @@ jobs:
           name: sso
           location: 'germanynorth'
           environment-variables: |
-            SSO_STATE = ${{ env.sso_state }}
-            SSO_CLIENT_SECRET = ${{ env.sso_client_secret }}
+            AZURE_SSO_STATE=${{ env.AZURE_SSO_STATE }}
+            AZURE_SSO_CLIENT_SECRET=${{ env.AZURE_SSO_CLIENT_SECRET }}
+
