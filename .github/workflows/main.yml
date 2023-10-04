@@ -1,10 +1,6 @@
 on: [push]
 name: Linux_Container_Workflow
 
-env:
-  AZURE_SSO_STATE: ${{ secrets.SSO_STATE }}
-  AZURE_SSO_CLIENT_SECRET: ${{ secrets.SSO_CLIENT_SECRET }}
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -39,6 +35,5 @@ jobs:
           name: sso
           location: 'germanynorth'
           environment-variables: |
-            AZURE_SSO_STATE=${{ env.AZURE_SSO_STATE }}
-            AZURE_SSO_CLIENT_SECRET=${{ env.AZURE_SSO_CLIENT_SECRET }}
-
+            SSO_STATE = ${{ secrets.SSO_STATE }}
+            SSO_CLIENT_SECRET = ${{ secrets.SSO_CLIENT_SECRET }}
