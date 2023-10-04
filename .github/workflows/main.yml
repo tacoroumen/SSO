@@ -4,7 +4,6 @@ name: Linux_Container_Workflow
 env:
   sso_state: ${{ secrets.SSO_STATE }}
   sso_client_secret: ${{ secrets.SSO_CLIENT_SECRET }}
-  test_env: "Testing"
 
 jobs:
   build-and-deploy:
