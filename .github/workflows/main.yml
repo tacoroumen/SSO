@@ -1,5 +1,5 @@
 on: [push]
-name: Linux_Container_Workflow
+name: Push_to_Azure
 
 env:
   sso_state: ${{ secrets.SSO_STATE }}
@@ -39,5 +39,5 @@ jobs:
           name: sso
           location: 'germanynorth'
           environment-variables: |
-            SSO_STATE:=${{ env.sso_state }}
-            SSO_CLIENT_SECRET=${{ env.sso_client_secret }}
+            SSO_STATE = ${{ env.sso_state }}
+            SSO_CLIENT_SECRET = ${{ env.sso_client_secret }}
