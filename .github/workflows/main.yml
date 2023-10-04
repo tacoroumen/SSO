@@ -38,3 +38,6 @@ jobs:
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           name: sso
           location: 'germanynorth'
+          environment-variables: |
+            SSO_STATE:=${{ env.sso_state }}
+            SSO_CLIENT_SECRET=${{ env.sso_client_secret }}
