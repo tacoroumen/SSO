@@ -1,0 +1,47 @@
+on:
+  push:
+    branches:
+      - main  # Change to your target branch
+
+name: Azure_Web_App_Container_Workflow
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: 'Build and push Docker image'
+        run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sso:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sso:${{ github.sha }}
+
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v2  # Use the Azure Web App Deploy action
+        with:
+          app-name: ${{ secrets.WEB_APP_NAME }}  # Set your Azure Web App name
+          # slot-name: ${{ secrets.WEB_APP_SLOT }}  # Set your deployment slot name (optional)
+          images: |
+            sso=${{ secrets.REGISTRY_LOGIN_SERVER }}/sso:${{ github.sha }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Set your Web App publish profile
+
+      - name: 'Set environment variables'
+        run: |
+          az webapp config appsettings set --name ${{ secrets.WEB_APP_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --settings SSO_STATE=${{ secrets.SSO_STATE }} SSO_CLIENT_SECRET=${{ secrets.SSO_CLIENT_SECRET }}
+        env:
+          AZURE_CORE_MODIFY_DEFAULTS: 1  # To modify Azure CLI default behavior
+
