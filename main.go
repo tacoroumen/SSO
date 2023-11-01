@@ -127,7 +127,7 @@ func main() {
 			// Check the response status code
 			if resp.StatusCode != http.StatusOK {
 				fmt.Println("Unexpected response status:", resp.Status)
-				http.Error(w, "Unexpected response status from Microsoft API \nCheck if Access-Token(code) is valid", http.StatusBadRequest)
+				http.Error(w, "Unexpected response status from Microsoft API. \nCheck if Access-Token(code) is valid. \nElse check if the origin domain in the config.json is  correct.", http.StatusBadRequest)
 				return
 			}
 
