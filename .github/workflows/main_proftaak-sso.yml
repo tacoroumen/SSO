@@ -30,8 +30,14 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: proftaak2.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0bf49bb8d8624597944a7eea5118acb0 }}/sso:${{ github.sha }}
+        tags: proftaak2.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0bf49bb8d8624597944a7eea5118acb0 }}/sso:${{ github.run_number	 }}
         file: ./Dockerfile
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+          push: true
+          tags: proftaak2.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0bf49bb8d8624597944a7eea5118acb0 }}/sso:latest
+          file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,4 +54,4 @@ jobs:
         app-name: 'proftaak-sso'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_23a363d691a84cc89c3cd36fc9703480 }}
-        images: 'proftaak2.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0bf49bb8d8624597944a7eea5118acb0 }}/sso:${{ github.sha }}'
+        images: 'proftaak2.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_0bf49bb8d8624597944a7eea5118acb0 }}/sso:latest'
