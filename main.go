@@ -3,17 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"io"
 	"os"
 	"strings"
 )
 
 func getconfig() (string, string, string, string, string) {
 	// Read the content of the aconfig.json file
-	data, err := ioutil.ReadFile("config.json")
+	data, err := os.ReadFile("config.json")
 	if err != nil {
 		fmt.Println("Error reading config.json:", err)
 		return "", "", "", "", ""
@@ -192,7 +192,7 @@ func Graph_Microsoft(token string) (AgeGroup string, CountryCode string, UUID st
 	// Check the response status code
 	if resp.StatusCode == http.StatusOK {
 		fmt.Println("Request successful!")
-		respBody, err := ioutil.ReadAll(resp.Body)
+		respBody, err := io.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println("Error reading response:", err)
 			return
