@@ -3,17 +3,17 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
-	"io"
 	"os"
 	"strings"
 )
 
 func getconfig() (string, string, string, string, string) {
 	// Read the content of the aconfig.json file
-	data, err := os.ReadFile("config.json")
+	data, err := os.ReadFile("config/config.json")
 	if err != nil {
 		fmt.Println("Error reading config.json:", err)
 		return "", "", "", "", ""
