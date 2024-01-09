@@ -144,7 +144,10 @@ func main() {
 			AgeGroup, CountryCode, UUID, Email, FirstName, LastName := Graph_Microsoft(microsoft_access.AccessToken)
 			Name := FirstName + " " + LastName
 			Employee := containsSubstring(Email, medewerker_email)
-			Employee = containsSubstring(Email, medewerker_email2)
+			Employee2 := containsSubstring(Email, medewerker_email2)
+			if Employee == true || Employee2 == true {
+				Employee = true
+			}
 			// Create the JSON response with the desired format
 			jsonResponse := fmt.Sprintf(`{
 	"AgeGroup": "%s",
