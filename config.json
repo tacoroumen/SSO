@@ -1,7 +1,8 @@
 {
 	"client_id": "f8906a64-ed0d-4341-bc42-466d1b091093",
-	"redirect_uri": "https://172.0.0.1/verify",
+	"redirect_uri": "https://proftaak-sso.azurewebsites.net/verify",
 	"grant_type": "authorization_code",
 	"scope": "user.read mail.read",
-	"medwerker_email": "@zvrx3.onmicrosoft.com"
+	"medwerker_email": "@zvrx3.onmicrosoft.com",
+	"medwerker_email2": "@fonteynholidayparks.com"
 }

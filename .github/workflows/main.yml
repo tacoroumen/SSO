@@ -37,4 +37,4 @@ jobs:
           environment-variables: |
             SSO_STATE=${{ secrets.SSO_STATE }}
             SSO_CLIENT_SECRET=${{ secrets.SSO_CLIENT_SECRET }}
-
+         

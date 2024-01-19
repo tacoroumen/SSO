@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -11,12 +11,12 @@ import (
 	"strings"
 )
 
-func getconfig() (string, string, string, string, string) {
+func getconfig() (string, string, string, string, string, string) {
 	// Read the content of the aconfig.json file
-	data, err := ioutil.ReadFile("config.json")
+	data, err := os.ReadFile("config/config.json")
 	if err != nil {
 		fmt.Println("Error reading config.json:", err)
-		return "", "", "", "", ""
+		return "", "", "", "", "", ""
 	}
 
 	// Parse the JSON data into the Config struct
@@ -24,9 +24,9 @@ func getconfig() (string, string, string, string, string) {
 	err = json.Unmarshal(data, &config)
 	if err != nil {
 		fmt.Println("Error parsing JSON:", err)
-		return "", "", "", "", ""
+		return "", "", "", "", "", ""
 	}
-	return config.Client_id, config.Redirect_uri, config.Grant_type, config.Scope, config.Medwerker_Email
+	return config.Client_id, config.Redirect_uri, config.Grant_type, config.Scope, config.Medewerker_Email, config.Medewerker_Email2
 }
 
 func getsecrets() (string, string) {
@@ -45,7 +45,8 @@ type Config struct {
 	Grant_type         string `json:"grant_type"`
 	Grant_type_refresh string `json:"grant_type_refresh"`
 	Scope              string `json:"scope"`
-	Medwerker_Email    string `json:"medwerker_email"`
+	Medewerker_Email   string `json:"medewerker_email"`
+	Medewerker_Email2  string `json:"medewerker_email2"`
 }
 
 type microsoft_access struct {
@@ -92,7 +93,7 @@ func main() {
 
 			// Prepare the form data
 			formData := url.Values{}
-			client_id, redirect_uri, grant_type, scope, medwerker_email := getconfig()
+			client_id, redirect_uri, grant_type, scope, medewerker_email, medewerker_email2 := getconfig()
 			if client_id == "" {
 				http.Error(w, "Error reading config.json", http.StatusBadRequest)
 				return
@@ -127,7 +128,7 @@ func main() {
 			// Check the response status code
 			if resp.StatusCode != http.StatusOK {
 				fmt.Println("Unexpected response status:", resp.Status)
-				http.Error(w, "Unexpected response status from Microsoft API \nCheck if Access-Token(code) is valid", http.StatusBadRequest)
+				http.Error(w, "Unexpected response status from Microsoft API. \nCheck if Access-Token(code) is valid. \nElse check if the origin domain in the config.json is  correct.", http.StatusBadRequest)
 				return
 			}
 
@@ -142,8 +143,11 @@ func main() {
 
 			AgeGroup, CountryCode, UUID, Email, FirstName, LastName := Graph_Microsoft(microsoft_access.AccessToken)
 			Name := FirstName + " " + LastName
-			Employee := containsSubstring(Email, medwerker_email)
-
+			Employee := containsSubstring(Email, medewerker_email)
+			Employee2 := containsSubstring(Email, medewerker_email2)
+			if Employee == true || Employee2 == true {
+				Employee = true
+			}
 			// Create the JSON response with the desired format
 			jsonResponse := fmt.Sprintf(`{
 	"AgeGroup": "%s",
@@ -192,7 +196,7 @@ func Graph_Microsoft(token string) (AgeGroup string, CountryCode string, UUID st
 	// Check the response status code
 	if resp.StatusCode == http.StatusOK {
 		fmt.Println("Request successful!")
-		respBody, err := ioutil.ReadAll(resp.Body)
+		respBody, err := io.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println("Error reading response:", err)
 			return
